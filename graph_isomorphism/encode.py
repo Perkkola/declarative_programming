@@ -66,24 +66,39 @@ def encode(pattern: Graph, target: Graph) -> CNF:
     #   non-adjacency (non-existence of edges between vertices).
     # See the file graph.py for the graph interface allowing one to
     # obtain the edge relations of the pattern and target graphs in question.
+
+
+   
+
+    #Injection
+    for p_vertex in range(1, pattern.nof_vertices + 1):
+        cnf.append([m_cnf(p_vertex, t_vertex) for t_vertex in range(1, target.nof_vertices + 1)])
+
+        #At least one and at most one pattern vertex maps to target
+        for t_vertex_1 in range(1, target.nof_vertices + 1):
+            for t_vertex_2 in range(t_vertex_1 + 1, target.nof_vertices + 1):
+                cnf.append([-m_cnf(p_vertex, t_vertex_1), -m_cnf(p_vertex, t_vertex_2)])
+
+    #At most one pattern vertex per target
     for t_vertex in range(1, target.nof_vertices + 1):
         for p_vertex_1 in range(1, pattern.nof_vertices + 1):
-            for p_vertex_2 in range(1, pattern.nof_vertices + 1):
-                if p_vertex_1 != p_vertex_2:
-                    cnf.append([-m_cnf(p_vertex_1, t_vertex), -m_cnf(p_vertex_2, t_vertex)]) #Injection
+            for p_vertex_2 in range(p_vertex_1 + 1, pattern.nof_vertices + 1):
+                cnf.append([-m_cnf(p_vertex_1, t_vertex), -m_cnf(p_vertex_2, t_vertex)])
 
-    
+    #If p_vertex_1 gets mapped to t_vertex, then all p_vertex_1 neighbors get mapped to some neighbor of t_vertex
     for p_vertex_1 in range(1, pattern.nof_vertices + 1):
-        # cnf.append([m_cnf(p_vertex_1, t_vertex) for t_vertex in range(1, target.nof_vertices + 1)])
-        for t_vertex in range(1, target.nof_vertices + 1):
-            cnf.append([m_cnf(p_vertex_1, t_vertex)]) #Map p_vertex_1 to t_vertex
-            for p_vertex_2 in range(1, pattern.nof_vertices + 1):
-                if p_vertex_2 in pattern.neighbours[p_vertex_1]: #For every neighbor of p_vertex_1, map the neighbor into a neighbor of t_vertex
-                    cnf.append([m_cnf(p_vertex_2, t_neighbor) for t_neighbor in target.neighbours[t_vertex]])
-                else:
+        for p_vertex_2 in pattern.neighbours[p_vertex_1]:
+            for t_vertex in range(1, target.nof_vertices + 1):
+                clause = [-m_cnf(p_vertex_1, t_vertex)]
+                clause.extend([m_cnf(p_vertex_2, t_neighbor) for t_neighbor in target.neighbours[t_vertex]])
+                cnf.append(clause)
+
+    #If p_vertex_2 is not a neighbor of p_vertex_1, then p_vertex_2 must not get mapped to any neighbor of t_vertex
+    for p_vertex_1 in range(1, pattern.nof_vertices + 1):
+        for p_vertex_2 in range(p_vertex_1 + 1, pattern.nof_vertices + 1):
+            if p_vertex_2 not in pattern.neighbours[p_vertex_1]:
+                for t_vertex in range(1, target.nof_vertices + 1):
                     for t_neighbor in target.neighbours[t_vertex]:
-                        cnf.append([-m_cnf(p_vertex_2, t_neighbor)])
-    
-    
+                        cnf.append([-m_cnf(p_vertex_1, t_vertex), -m_cnf(p_vertex_2, t_neighbor)])
 
     return cnf
