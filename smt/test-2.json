@@ -1,0 +1,28 @@
+{
+    "nof_cells": 11,
+    "nof_frequencies": 3,
+    "separation": [
+    [0,1,0,0,0,0,0,0,1,1,0],
+    [1,0,1,0,0,1,1,0,0,0,0],
+    [0,1,0,1,0,0,0,0,1,1,0],
+    [0,0,1,0,1,0,0,0,0,1,0],
+    [0,0,0,1,0,1,0,0,1,0,0],
+    [0,1,0,0,1,0,1,0,0,0,1],
+    [0,1,0,0,0,1,0,1,0,0,0],
+    [0,0,0,0,0,0,1,0,1,0,0],
+    [1,0,1,0,1,0,0,1,0,1,1],
+    [1,0,1,1,0,0,0,0,1,0,1],
+    [0,0,0,0,0,1,0,0,1,1,0]],
+    "illegal": [
+    [false,false,false],
+    [false,false,false],
+    [false,false,true],
+    [false,false,false],
+    [false,false,false],
+    [false,false,true],
+    [false,false,false],
+    [false,false,false],
+    [true,false,false],
+    [false,false,false],
+    [false,false,true]]
+}

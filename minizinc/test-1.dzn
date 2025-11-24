@@ -1,0 +1,5 @@
+nofCells = 3;
+nofFrequencies = 2;
+
+separations = [|0,1,1|1,0,0|1,0,0|];
+illegal = [|false,false|false,false|false,false|];
